@@ -1,40 +1,44 @@
 import gimnasia.*
 
 class Personas{
-    var property tiempo
-    var property peso
-    method realizarRutina(rutina)
+    var peso
+    method realizarRutina(rutina){
+        self.verificarRutina(rutina)
+        peso = peso - self.pesoQuePierdeAlHacerRutina(rutina,self.tiempo())
+    }
+    method verificarRutina(rutina){
+        if (not self.puedeHacerRutina(rutina)){
+            self.error("No, no podes")
+        }
+    }
+    method puedeHacerRutina(rutina)
 
     method pesoQuePierdeAlHacerRutina(rutina,unTiempo){
        return rutina.caloriasQuemadas(unTiempo) / self.kilosPorCalorias()
     }
 
     method kilosPorCalorias()
+    method tiempo()
+    method peso()
 }
 
 class PersonaSedentaria inherits Personas{
-
-    override method realizarRutina(rutina){
-        if(self.peso()>50){
-            peso = peso - self.pesoQuePierdeAlHacerRutina(rutina,tiempo)
-        } else{
-            self.error("No podes realizar esta rutina, pesas "+ self.peso().toString() + ",flacucho")
-        }
-        
-    }
+    const tiempoDeEjercicio
+    
     override method kilosPorCalorias(){
         return 7000
     }
+    override method tiempo(){
+        return tiempoDeEjercicio
+    }
+    override method puedeHacerRutina(rutina){
+        return self.peso()>50
+    }
 }
 
-class PersonaAtleta inherits Personas(tiempo=90){
-     override method realizarRutina(rutina){
-        if(rutina.caloriasQuemadas(tiempo)>10000){
-            peso = peso - self.pesoQuePierdeAlHacerRutina(rutina,tiempo)
-        } else{
-            self.error("No podes realizar esta rutina, gastas poquito en calorias")
-        }
-        
+class PersonaAtleta inherits Personas(){
+    override method puedeHacerRutina(rutina){
+        return rutina.caloriasQuemadas(self.tiempo())
     }
 
     override method pesoQuePierdeAlHacerRutina(rutina,unTiempo){
@@ -42,5 +46,8 @@ class PersonaAtleta inherits Personas(tiempo=90){
     }
     override method kilosPorCalorias(){
         return 8000
+    }
+    override method tiempo(){
+        return 90
     }
 }
